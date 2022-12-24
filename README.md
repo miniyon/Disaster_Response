@@ -19,3 +19,10 @@ I have utilised the below packages and libraries
 12. sklearn.tree DecisionTreeClassifier
 13. sklearn.metrics classification_report
 14. warnings
+
+
+
+DataSource :
+https://www.kaggle.com/datasets/airbnb/boston
+https://www.kaggle.com/datasets/airbnb/seattle
+Acknowledgements: Dataset Credit : AirBnB , This data is licensed under a Creative Commons Attribution 4.0 International License.
