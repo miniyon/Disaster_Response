@@ -5,17 +5,17 @@ This project allows us to read a tweet and label it as any of the below categori
 Just download the project folder and run it in the local conda environment. 
 I have utilised the below packages and libraries
 
-sys
-pandas
-sqlite3
-re 
-numpy
-pickle
-sklearn.feature_extraction.text TfidfVectorizer
-sklearn.base BaseEstimator
-sklearn.pipeline Pipeline
-sklearn.multioutput MultiOutputClassifier
-sklearn.model_selection train_test_split
-sklearn.tree DecisionTreeClassifier
-sklearn.metrics classification_report
-warnings
+1. sys
+2. pandas
+3. sqlite3
+4. re 
+5. numpy
+6. pickle
+7. sklearn.feature_extraction.text TfidfVectorizer
+8. sklearn.base BaseEstimator
+9. sklearn.pipeline Pipeline
+10. sklearn.multioutput MultiOutputClassifier
+11. sklearn.model_selection train_test_split
+12. sklearn.tree DecisionTreeClassifier
+13. sklearn.metrics classification_report
+14. warnings
