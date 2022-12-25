@@ -17,21 +17,6 @@ from nltk.tokenize import word_tokenize
 from train_classifier import TextClean
 
 
-
-
-
-
-# from sklearn.feature_extraction.text import TfidfVectorizer
-# from sklearn.multioutput import MultiOutputClassifier
-# from sklearn.tree import DecisionTreeClassifier
-
-
-
-# from sklearn.externals import joblib
-# from sqlalchemy import create_engine
-
-
-
 app = Flask(__name__)
 
 def tokenize(text):
@@ -64,7 +49,10 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+    df_sub = df[df.columns[3:]].astype(int)
+    df_sub = df_sub.sum().reset_index()
+    df_sub.rename(columns = {'index':'Category',0:'Count'},inplace=True)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -83,6 +71,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=df_sub['Category'].unique().tolist(),
+                    y=df_sub['Count'].values.tolist()
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
                 }
             }
         }
