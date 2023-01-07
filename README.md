@@ -46,4 +46,4 @@ python process_data.py disaster_messages.csv disaster_categories.csv DisasterRes
 
 3. In order to train model from terminal:
 cd model
-python train_classifier.py DisasterResponse.db classifier.pkl
+python train_classifier.py ..\data\DisasterResponse.db classifier.pkl
