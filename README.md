@@ -24,3 +24,11 @@ Files in the repository
 
 ![image](https://user-images.githubusercontent.com/117662647/211130962-e9575423-375a-4546-8eaa-97a711afc6aa.png)
 
+In order to run the application from terminal: 
+cd app
+python run.py
+
+In order to run the data processing from terminal:
+cd data
+python process_data.py disaster_messages.csv disaster_categories.csv DisasterResponse.db
+
