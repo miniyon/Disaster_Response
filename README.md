@@ -24,6 +24,16 @@ Files in the repository
 
 ![image](https://user-images.githubusercontent.com/117662647/211130962-e9575423-375a-4546-8eaa-97a711afc6aa.png)
 
+File Usage:
+
+1. run.py - Launch application
+2. process_data.py - process the data and insert into Database
+3. train_classifier.py - train the model from data from db
+4. disaster_messages.csv,disaster_categories.csv - input files to process_data.py
+5. DisasterResponse.db - database name to which processed data is saved
+6. master.html - render graphs on app home page
+7. go.html - render model input and prediction on app
+
 **RUN Application**
 
 1. In order to run the application from terminal: 
