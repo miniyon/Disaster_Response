@@ -10,15 +10,18 @@ I have utilised the below packages and libraries
 3. sqlite3
 4. re 
 5. numpy
-6. pickle
-7. sklearn.feature_extraction.text TfidfVectorizer
-8. sklearn.base BaseEstimator
-9. sklearn.pipeline Pipeline
-10. sklearn.multioutput MultiOutputClassifier
-11. sklearn.model_selection train_test_split
-12. sklearn.tree DecisionTreeClassifier
-13. sklearn.metrics classification_report
-14. warnings
+6. nltk
+7. pickle
+8. sklearn.feature_extraction.text TfidfVectorizer
+9. sklearn.base BaseEstimator
+10. sklearn.pipeline Pipeline
+11. sklearn.multioutput MultiOutputClassifier
+12. sklearn.model_selection train_test_split
+13. sklearn.tree DecisionTreeClassifier
+14. sklearn.metrics classification_report
+15. warnings
+
+**NOTE**: download nltk('punkt') into the runtime environment
 
 Files in the repository
 
