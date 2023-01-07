@@ -20,9 +20,7 @@ I have utilised the below packages and libraries
 13. sklearn.metrics classification_report
 14. warnings
 
+Files in the repository
 
+![image](https://user-images.githubusercontent.com/117662647/211130962-e9575423-375a-4546-8eaa-97a711afc6aa.png)
 
-DataSource :
-https://www.kaggle.com/datasets/airbnb/boston
-https://www.kaggle.com/datasets/airbnb/seattle
-Acknowledgements: Dataset Credit : AirBnB , This data is licensed under a Creative Commons Attribution 4.0 International License.
