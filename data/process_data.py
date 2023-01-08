@@ -40,7 +40,7 @@ def merge_data(message,cleaned,id_):
     return data
 
 
-def clean_data(message,target,target_col,id_):
+def clean_data(message,target,target_col,id_,genre_dict):
 
     """this function cleans the target 
        dataframe by converting the single column to multiple columns
@@ -67,6 +67,8 @@ def clean_data(message,target,target_col,id_):
         x_temp[col] = x_temp[col].apply(lambda x : str(x).split('-')[1])  
     x_temp.columns = [id_] + columns
     df_final = pd.merge(message[['id','message','genre']],x_temp,on='id')
+    
+    df_final['genre'] = df_final['genre'].apply(lambda x : genre_dict[x])
     df_final.drop_duplicates(inplace=True)
     return df_final
 
@@ -94,6 +96,7 @@ def main():
         target_col,id_col = 'categories','id'
         table_name = 'disaster_response_tweets'
         messages,categories,db_name = sys.argv[1:]
+        genre_dict = {'news':0,'direct':1,'social':2}
         
         print('Reading the input data...\n    FileName: {}'.format(messages))
         data = read_data(messages)
@@ -102,7 +105,7 @@ def main():
         categories = read_data(categories)
 
         print('Cleaning the data ...')
-        data = clean_data(data,categories,target_col,id_col)
+        data = clean_data(data,categories,target_col,id_col,genre_dict)
 
         print('Inserting into Database...\n    Database: {} , Table : {}'.format(db_name,table_name))
         insert_into_db(db_name,table_name,data)

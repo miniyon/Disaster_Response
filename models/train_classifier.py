@@ -8,10 +8,25 @@ from sklearn.base import BaseEstimator
 from sklearn.pipeline import Pipeline
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import classification_report
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
 import warnings
 warnings.filterwarnings('ignore')
+
+
+def tokenize_lemmatize_text(x):
+    tokens_list = []
+    if (str(x)!='nan') or (str(x)!='None'):
+        tokens = word_tokenize(x)
+        if len(tokens)!=0:
+            for token in tokens:
+                tokens_list.append(WordNetLemmatizer().lemmatize(token))
+        return " ".join(tokens_list)
+    else:
+        return 'empty'
 
 
 class TextClean(BaseEstimator):
@@ -44,15 +59,19 @@ class TextClean(BaseEstimator):
         """ 
         data = pd.Series(data,name='message')       
         data = data.reset_index()
-       
+        
+        # tokenize & lemmatize text
+        data['cleaned_x'] = data['message'].apply(lambda x : tokenize_lemmatize_text(x))
+        
         # replace all characters other than text
-        data['cleaned'] = data['message'].apply(lambda x : re.sub('\s+',' ',re.sub('[^a-z,A-Z]',' ',x)))
+        data['cleaned_y'] = data['cleaned_x'].apply(lambda x : re.sub('\s+',' ',re.sub('[^a-zA-Z]',' ',x)) if str(x)!='empty' else x)
         
         # convert all words to lowercase
-        data['cleaned'] = data['cleaned'].apply(lambda x : x.lower())
+        data['cleaned'] = data['cleaned_y'].apply(lambda x : x.lower() if ((str(x)!='empty') or (str(x) !='None')) else None)
         return data['cleaned']
 
- 
+
+
 def load_data(database_filepath):
     """
     Loads the training data from the database and
@@ -83,7 +102,7 @@ def load_data(database_filepath):
     
 
 
-def build_model():
+def build_model(X_train,Y_train):
     """
     Chains together the process of cleaning,
     vectorization and classification
@@ -91,11 +110,34 @@ def build_model():
     Returns:
         Pipeline object: the object allows for the cleaning, vectorization 
         and classification in sequence
-    """    
-    model_pipeline = Pipeline(steps=[('textclean', TextClean()),
-                                 ('texttovector',TfidfVectorizer(stop_words = 'english')),
-                                ('classifier',MultiOutputClassifier(DecisionTreeClassifier(max_depth=4,random_state=42)))])
+    """  
+
+    parameters = {
+        'criterion' : ['gini','entropy'],
+        'max_depth' : [3,4,5,6],
+        'min_samples_split':[2,3,4]
+    }  
+    gridcv = GridSearchCV(estimator=DecisionTreeClassifier(),
+        param_grid=parameters,
+        scoring='accuracy',
+        cv=3)
     
+    gridcv_pipeline = Pipeline(steps=[('textclean', TextClean()),
+                                 ('texttovector',TfidfVectorizer(stop_words = 'english')),
+                                ('gridcv',gridcv)])
+
+    gridcv_pipeline.fit(X_train, Y_train)
+    criterion = gridcv.best_params_['criterion']
+    max_depth = gridcv.best_params_['max_depth']
+    min_samples = gridcv.best_params_['min_samples_split']
+
+    model_pipeline = Pipeline(steps=[('textclean', TextClean()),
+                                ('texttovector',TfidfVectorizer(stop_words = 'english')),
+                            ('classifier',MultiOutputClassifier(DecisionTreeClassifier(criterion=criterion,
+                            max_depth=max_depth,
+                            min_samples_split=min_samples,
+                            random_state=42)))])
+
     return model_pipeline
 
 
@@ -141,14 +183,17 @@ def main():
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))
         X, Y, category_names = load_data(database_filepath)
+        
         X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
+        X_grid=X_train.copy()
+        Y_grid = Y_train.copy()
         
-
-        print('Building model...')
-        model = build_model()
+        print('Creating Pipeline ...')
+        model = build_model(X_grid,Y_grid)
         
-        print('Training model...')
-        model.fit(X_train, Y_train)
+        print('Training Model ...')
+        
+        model.fit(X_train,Y_train)
          
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)

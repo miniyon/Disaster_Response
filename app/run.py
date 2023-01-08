@@ -47,6 +47,8 @@ def index():
     
     # extract data needed for visuals
     # TODO: Below is an example - modify to extract data for your own visuals
+    reverse_genre_dict = {0:'news',1:'direct',2:'social'}
+    df['genre'] = df['genre'].apply(lambda x : reverse_genre_dict[x])
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     df_sub = df[df.columns[3:]].astype(int)
